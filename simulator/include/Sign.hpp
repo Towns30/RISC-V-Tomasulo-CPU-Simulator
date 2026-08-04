@@ -1,5 +1,6 @@
 #ifndef SIGN_HPP
 #define SIGN_HPP
+#include <compare>
 #include <cstdint>
 
 enum class Op : std::uint8_t
@@ -48,20 +49,22 @@ enum class Op : std::uint8_t
   // R 型运算
   Add,
   Sub,
-  Sll,
-  Slt,
-  Sltu,
   Xor,
-  Srl,
-  Sra,
   Or,
   And,
+  Sll,
+  Srl,
+  Sra,
+  Slt,
+  Sltu,
 };
 
 struct FetchToMemSign
 {
   bool pc_valid_ = false;
   uint32_t pc_ = 0;
+
+  auto operator<=>(const FetchToMemSign &) const = default;
 };
 
 struct FetchToDecoderSign
@@ -72,6 +75,8 @@ struct FetchToDecoderSign
   uint32_t pc_ = 0;
   bool predicted_next_pc_valid_ = false;
   uint32_t predicted_next_pc_ = 0;
+
+  auto operator<=>(const FetchToDecoderSign &) const = default;
 };
 
 struct DecoderToIssueSign
@@ -92,6 +97,8 @@ struct DecoderToIssueSign
   uint8_t rs2_ = 0;
   bool imm_valid_ = false;
   uint32_t imm_ = 0;
+
+  auto operator<=>(const DecoderToIssueSign &) const = default;
 };
 
 struct IssueToRATSign
@@ -100,6 +107,8 @@ struct IssueToRATSign
   uint8_t register_id_ = 0;
   bool rob_id_valid_ = false;
   uint8_t rob_id_ = 0;
+
+  auto operator<=>(const IssueToRATSign &) const = default;
 };
 
 struct IssueToLSQSign
@@ -119,6 +128,8 @@ struct IssueToLSQSign
   uint8_t Qk_ = 0;
   bool rd_valid_ = false;
   uint8_t rd_ = 0;
+
+  auto operator<=>(const IssueToLSQSign &) const = default;
 };
 
 struct IssueToRSSign
@@ -140,6 +151,8 @@ struct IssueToRSSign
   uint8_t Qk_ = 0;
   bool rd_valid_ = false;
   uint8_t rd_ = 0;
+
+  auto operator<=>(const IssueToRSSign &) const = default;
 };
 
 struct IssueToROBSign
@@ -151,6 +164,8 @@ struct IssueToROBSign
   uint8_t rd_ = 0;
   bool predicted_pc_valid_ = false;
   uint32_t predicted_pc_ = 0;
+
+  auto operator<=>(const IssueToROBSign &) const = default;
 };
 
 struct LSQToMemSign
@@ -162,6 +177,8 @@ struct LSQToMemSign
   uint32_t addr_ = 0;
   bool value_valid_ = false;
   uint32_t value_ = 0;
+
+  auto operator<=>(const LSQToMemSign &) const = default;
 };
 
 struct LSQToCDBSign
@@ -170,6 +187,8 @@ struct LSQToCDBSign
   uint8_t rob_id_ = 0;
   bool value_valid_ = false;
   uint32_t value_ = 0;
+
+  auto operator<=>(const LSQToCDBSign &) const = default;
 };
 
 struct LSQToROBSign
@@ -180,6 +199,8 @@ struct LSQToROBSign
   uint32_t addr_ = 0;
   bool value_valid_ = false;
   uint32_t value_ = 0;
+
+  auto operator<=>(const LSQToROBSign &) const = default;
 };
 
 struct RSToALUSign
@@ -195,6 +216,8 @@ struct RSToALUSign
   uint32_t pc_ = 0;
   bool offset_valid_ = false;
   uint32_t offset_ = 0;
+
+  auto operator<=>(const RSToALUSign &) const = default;
 };
 
 struct ALUToCDBSign
@@ -205,6 +228,8 @@ struct ALUToCDBSign
   uint32_t value_ = 0;
   bool real_pc_valid_ = false;
   uint32_t real_pc_ = 0;
+
+  auto operator<=>(const ALUToCDBSign &) const = default;
 };
 
 struct CDBToRS_LSQ_ROB_IssueSign
@@ -215,6 +240,8 @@ struct CDBToRS_LSQ_ROB_IssueSign
   uint32_t value_ = 0;
   bool real_pc_valid_ = false;
   uint32_t real_pc_ = 0;
+
+  auto operator<=>(const CDBToRS_LSQ_ROB_IssueSign &) const = default;
 };
 
 struct MemToLSQSign
@@ -224,6 +251,8 @@ struct MemToLSQSign
   bool value_valid_ = false;
   uint32_t value_ = 0;
   bool is_written_ = false;
+
+  auto operator<=>(const MemToLSQSign &) const = default;
 };
 
 struct MemToROBSign
@@ -231,11 +260,16 @@ struct MemToROBSign
   bool rob_id_valid_ = false;
   uint8_t rob_id_ = 0;
   bool is_written_ = false;
+
+  auto operator<=>(const MemToROBSign &) const = default;
 };
 
-struct ROBToIssue_RAT_LSQ_RS_Decoder_CDB_MemoryFlushSign
+struct ROBToIssue_RAT_LSQ_RS_Decoder_CDB_Memory_ALUFlushSign
 {
   bool need_flush_ = false;
+
+  auto operator<=>(const ROBToIssue_RAT_LSQ_RS_Decoder_CDB_Memory_ALUFlushSign
+                       &) const = default;
 };
 
 struct ROBToFetchFlushSign
@@ -243,6 +277,8 @@ struct ROBToFetchFlushSign
   bool need_flush_ = false;
   bool real_pc_valid_ = false;
   uint32_t real_pc_ = 0;
+
+  auto operator<=>(const ROBToFetchFlushSign &) const = default;
 };
 
 struct ROBToLSQSign
@@ -250,6 +286,8 @@ struct ROBToLSQSign
   bool rob_id_valid_ = false;
   uint8_t rob_id_ = 0;
   bool write_enabled_ = false;
+
+  auto operator<=>(const ROBToLSQSign &) const = default;
 };
 
 struct ROBToRATSign
@@ -257,6 +295,8 @@ struct ROBToRATSign
   bool commit_valid_ = false;
   uint8_t rd_ = 0;
   uint8_t rob_id_ = 0;
+
+  auto operator<=>(const ROBToRATSign &) const = default;
 };
 
 struct ROBToRegisterSign
@@ -265,11 +305,15 @@ struct ROBToRegisterSign
   uint8_t rd_ = 0;
   bool value_valid_ = false;
   uint32_t value_ = 0;
+
+  auto operator<=>(const ROBToRegisterSign &) const = default;
 };
 
 struct MemToFetchSign
 {
   bool inst_valid_ = false;
   uint32_t inst_ = 0;
+
+  auto operator<=>(const MemToFetchSign &) const = default;
 };
 #endif
