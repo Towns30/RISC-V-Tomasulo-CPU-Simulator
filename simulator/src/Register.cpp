@@ -23,7 +23,7 @@ void Register::Execute() // 利用current发送output
 {
 }
 
-void Register::UpdateNext() // 利用 current_state_ 和本周期input计算 next_state_
+void Register::UpdateNext() // 利用本周期input计算 next_state_
 {
   next_state_ = current_state_;
   if (rob_input_sign_.rd_valid_ && rob_input_sign_.value_valid_ && rob_input_sign_.rd_ != 0)

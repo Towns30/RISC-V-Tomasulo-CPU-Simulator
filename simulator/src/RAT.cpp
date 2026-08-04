@@ -30,7 +30,7 @@ void RAT::Execute() // 利用current发送output
 {
 }
 
-void RAT::UpdateNext() // 利用 current_state_ 和本周期input计算 next_state_
+void RAT::UpdateNext() // 利用本周期input计算 next_state_
 {
   next_state_ = current_state_;
   if (flush_input_sign_.need_flush_) // 需要flush则将下周期依赖状态清空

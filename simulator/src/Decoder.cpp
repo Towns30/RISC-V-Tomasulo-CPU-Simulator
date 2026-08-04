@@ -13,7 +13,7 @@ void Decoder::SetReady(bool ready) { ready_ = ready; }
 
 void Decoder::UpdateCurrent() { current_state_ = next_state_; }
 
-void Decoder::Execute()
+void Decoder::Execute() // 利用current发送output
 {
   issue_output_sign_ = {};
   if (current_state_.flush_input_.need_flush_)
@@ -447,7 +447,7 @@ void Decoder::Execute()
   }
 }
 
-void Decoder::UpdateNext()
+void Decoder::UpdateNext() // 利用本周期input计算 next_state_
 {
   next_state_.flush_input_ = flush_input_sign_;
   if (flush_input_sign_

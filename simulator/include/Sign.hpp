@@ -59,6 +59,13 @@ enum class Op : std::uint8_t
   Sltu,
 };
 
+enum class ROBType
+{
+  WriteReg,
+  WriteMem,
+  Branch
+};
+
 struct FetchToMemSign
 {
   bool pc_valid_ = false;
@@ -157,7 +164,7 @@ struct IssueToRSSign
 
 struct IssueToROBSign
 {
-  Op op_ = Op::Invalid;
+  ROBType rob_type;
   bool rob_id_valid_ = false;
   uint8_t rob_id_ = 0;
   bool rd_valid_ = false;

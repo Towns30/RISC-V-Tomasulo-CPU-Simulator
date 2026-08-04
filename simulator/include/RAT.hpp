@@ -8,14 +8,14 @@ struct RobID
   bool is_empty_ = true;
   uint8_t rob_id_ = 0;
 
-  auto operator<=>(const RobID&) const = default;
+  auto operator<=>(const RobID &) const = default;
 };
 
 struct RATState
 {
   RobID rat_map_[32];
 
-  auto operator<=>(const RATState&) const = default;
+  auto operator<=>(const RATState &) const = default;
 };
 
 struct RATQueryResult

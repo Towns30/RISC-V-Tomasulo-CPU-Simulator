@@ -15,7 +15,7 @@ void Fetch::SetReady(bool ready) { ready_ = ready; }
 
 void Fetch::UpdateCurrent() { current_state_ = next_state_; }
 
-void Fetch::Execute()
+void Fetch::Execute() // 利用current发送output
 {
   decoder_output_sign_ = {};
   memory_output_sign_ = {};
@@ -52,7 +52,7 @@ void Fetch::Execute()
       current_state_.memory_input_.pc_ + 4;
 }
 
-void Fetch::UpdateNext()
+void Fetch::UpdateNext() // 利用本周期input计算 next_state_
 {
   next_state_.flush_input_ = flush_input_sign_;
   next_state_.memory_input_ = memory_input_sign_;
