@@ -313,6 +313,8 @@ struct MemToFetchSign
 {
   bool inst_valid_ = false;
   uint32_t inst_ = 0;
+  bool pc_valid_ = false;
+  uint32_t pc_ = 0;
 
   auto operator<=>(const MemToFetchSign &) const = default;
 };
