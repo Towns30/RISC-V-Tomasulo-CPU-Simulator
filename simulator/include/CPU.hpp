@@ -2,7 +2,6 @@
 #define CPU_HPP
 
 #include "ALU.hpp"
-#include "CDB.hpp"
 #include "Decoder.hpp"
 #include "Fetch.hpp"
 #include "Issue.hpp"
@@ -46,7 +45,6 @@ private:
   RSToALUSign rs_to_alu_sign_{};
   ALUToCDBSign alu_to_cdb_sign_{};
   LSQToCDBSign lsq_to_cdb_sign_{};
-  CDBToRS_LSQ_ROB_IssueSign cdb_broadcast_sign_{};
 
   LSQToMemSign lsq_to_memory_sign_{};
   MemToLSQSign memory_to_lsq_sign_{};
@@ -68,7 +66,6 @@ private:
   Issue issue_;
   RS rs_;
   ALU alu_;
-  CDB cdb_;
   LSQ lsq_;
 };
 

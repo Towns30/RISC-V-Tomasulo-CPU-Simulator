@@ -239,18 +239,6 @@ struct ALUToCDBSign
   auto operator<=>(const ALUToCDBSign &) const = default;
 };
 
-struct CDBToRS_LSQ_ROB_IssueSign
-{
-  bool rob_id_valid_ = false;
-  uint8_t rob_id_ = 0;
-  bool value_valid_ = false;
-  uint32_t value_ = 0;
-  bool real_pc_valid_ = false;
-  uint32_t real_pc_ = 0;
-
-  auto operator<=>(const CDBToRS_LSQ_ROB_IssueSign &) const = default;
-};
-
 struct MemToLSQSign
 {
   bool rob_id_valid_ = false;

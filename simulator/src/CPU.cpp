@@ -8,19 +8,18 @@ CPU::CPU()
       decoder_(fetch_to_decoder_sign_, decoder_to_issue_sign_, rob_flush_sign_),
       register_(rob_to_register_sign_),
       rat_(issue_to_rat_sign_, rob_to_rat_sign_, rob_flush_sign_),
-      rob_(issue_to_rob_sign_, lsq_to_rob_sign_, cdb_broadcast_sign_,
-           memory_to_rob_sign_, rob_flush_sign_, rob_to_fetch_flush_sign_,
-           rob_to_lsq_sign_, rob_to_rat_sign_, rob_to_register_sign_),
+      rob_(issue_to_rob_sign_, lsq_to_rob_sign_, alu_to_cdb_sign_,
+           lsq_to_cdb_sign_, memory_to_rob_sign_, rob_flush_sign_,
+           rob_to_fetch_flush_sign_, rob_to_lsq_sign_, rob_to_rat_sign_,
+           rob_to_register_sign_),
       issue_(decoder_to_issue_sign_, issue_to_rat_sign_, issue_to_lsq_sign_,
-             issue_to_rs_sign_, issue_to_rob_sign_, cdb_broadcast_sign_,
-             rob_flush_sign_, register_, rat_, rob_),
-      rs_(issue_to_rs_sign_, rs_to_alu_sign_, cdb_broadcast_sign_,
-          rob_flush_sign_),
+             issue_to_rs_sign_, issue_to_rob_sign_, alu_to_cdb_sign_,
+             lsq_to_cdb_sign_, rob_flush_sign_, register_, rat_, rob_),
+      rs_(issue_to_rs_sign_, rs_to_alu_sign_, alu_to_cdb_sign_,
+          lsq_to_cdb_sign_, rob_flush_sign_),
       alu_(rs_to_alu_sign_, alu_to_cdb_sign_, rob_flush_sign_),
-      cdb_(alu_to_cdb_sign_, lsq_to_cdb_sign_, cdb_broadcast_sign_,
-           rob_flush_sign_),
       lsq_(issue_to_lsq_sign_, lsq_to_memory_sign_, lsq_to_cdb_sign_,
-           lsq_to_rob_sign_, cdb_broadcast_sign_, memory_to_lsq_sign_,
+           lsq_to_rob_sign_, alu_to_cdb_sign_, memory_to_lsq_sign_,
            rob_to_lsq_sign_, rob_flush_sign_)
 {
 }
@@ -45,7 +44,6 @@ void CPU::UpdateCurrentAll()
   issue_.UpdateCurrent();
   rs_.UpdateCurrent();
   alu_.UpdateCurrent();
-  cdb_.UpdateCurrent();
   lsq_.UpdateCurrent();
 }
 
@@ -77,7 +75,6 @@ void CPU::ClearSigns()
   rs_to_alu_sign_ = {};
   alu_to_cdb_sign_ = {};
   lsq_to_cdb_sign_ = {};
-  cdb_broadcast_sign_ = {};
 
   lsq_to_memory_sign_ = {};
   memory_to_lsq_sign_ = {};
@@ -98,7 +95,6 @@ void CPU::ExecuteAll()
   alu_.Execute();
   lsq_.Execute();
   memory_.Execute();
-  cdb_.Execute();
   register_.Execute();
   rat_.Execute();
   fetch_.Execute();
@@ -117,6 +113,5 @@ void CPU::UpdateNextAll()
   issue_.UpdateNext();
   rs_.UpdateNext();
   alu_.UpdateNext();
-  cdb_.UpdateNext();
   lsq_.UpdateNext();
 }

@@ -61,7 +61,8 @@ class ROB
 public:
   ROB(const IssueToROBSign &issue_input_sign,
       const LSQToROBSign &lsq_input_sign,
-      const CDBToRS_LSQ_ROB_IssueSign &cdb_input_sign,
+      const ALUToCDBSign &alu_cdb_input_sign,
+      const LSQToCDBSign &lsq_cdb_input_sign,
       const MemToROBSign &memory_input_sign,
       ROBToIssue_RAT_LSQ_RS_Decoder_CDB_Memory_ALUFlushSign &flush_output_sign,
       ROBToFetchFlushSign &fetch_flush_output_sign,
@@ -79,7 +80,8 @@ public:
 private:
   const IssueToROBSign &issue_input_sign_;
   const LSQToROBSign &lsq_input_sign_;
-  const CDBToRS_LSQ_ROB_IssueSign &cdb_input_sign_;
+  const ALUToCDBSign &alu_cdb_input_sign_;
+  const LSQToCDBSign &lsq_cdb_input_sign_;
   const MemToROBSign &memory_input_sign_;
   ROBToIssue_RAT_LSQ_RS_Decoder_CDB_Memory_ALUFlushSign &flush_output_sign_;
   ROBToFetchFlushSign &fetch_flush_output_sign_;

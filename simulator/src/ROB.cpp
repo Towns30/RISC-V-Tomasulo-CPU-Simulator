@@ -2,13 +2,16 @@
 
 ROB::ROB(
     const IssueToROBSign &issue_input_sign, const LSQToROBSign &lsq_input_sign,
-    const CDBToRS_LSQ_ROB_IssueSign &cdb_input_sign,
+    const ALUToCDBSign &alu_cdb_input_sign,
+    const LSQToCDBSign &lsq_cdb_input_sign,
     const MemToROBSign &memory_input_sign,
     ROBToIssue_RAT_LSQ_RS_Decoder_CDB_Memory_ALUFlushSign &flush_output_sign,
     ROBToFetchFlushSign &fetch_flush_output_sign, ROBToLSQSign &lsq_output_sign,
     ROBToRATSign &rat_output_sign, ROBToRegisterSign &register_output_sign)
     : issue_input_sign_(issue_input_sign), lsq_input_sign_(lsq_input_sign),
-      cdb_input_sign_(cdb_input_sign), memory_input_sign_(memory_input_sign),
+      alu_cdb_input_sign_(alu_cdb_input_sign),
+      lsq_cdb_input_sign_(lsq_cdb_input_sign),
+      memory_input_sign_(memory_input_sign),
       flush_output_sign_(flush_output_sign),
       fetch_flush_output_sign_(fetch_flush_output_sign),
       lsq_output_sign_(lsq_output_sign), rat_output_sign_(rat_output_sign),
@@ -164,22 +167,30 @@ void ROB::UpdateNext() // 利用本周期input计算 next_state_
   {
     next_state_.head_ = (next_state_.head_ + 1) % 16; // 内存写完出队
   }
-  if (cdb_input_sign_.rob_id_valid_)
+  if (alu_cdb_input_sign_.rob_id_valid_)
   {
-    if (cdb_input_sign_.real_pc_valid_)
+    if (alu_cdb_input_sign_.real_pc_valid_)
     {
-      next_state_.rob_infos_[cdb_input_sign_.rob_id_].real_pc_valid_ = true;
-      next_state_.rob_infos_[cdb_input_sign_.rob_id_].real_pc_ =
-          cdb_input_sign_.real_pc_;
-      next_state_.rob_infos_[cdb_input_sign_.rob_id_].ready_ = true;
+      next_state_.rob_infos_[alu_cdb_input_sign_.rob_id_].real_pc_valid_ = true;
+      next_state_.rob_infos_[alu_cdb_input_sign_.rob_id_].real_pc_ =
+          alu_cdb_input_sign_.real_pc_;
+      next_state_.rob_infos_[alu_cdb_input_sign_.rob_id_].ready_ = true;
     }
-    if (cdb_input_sign_.value_valid_)
+    if (alu_cdb_input_sign_.value_valid_)
     {
-      next_state_.rob_infos_[cdb_input_sign_.rob_id_].rd_value_valid_ = true;
-      next_state_.rob_infos_[cdb_input_sign_.rob_id_].rd_value_ =
-          cdb_input_sign_.value_;
-      next_state_.rob_infos_[cdb_input_sign_.rob_id_].ready_ = true;
+      next_state_.rob_infos_[alu_cdb_input_sign_.rob_id_].rd_value_valid_ = true;
+      next_state_.rob_infos_[alu_cdb_input_sign_.rob_id_].rd_value_ =
+          alu_cdb_input_sign_.value_;
+      next_state_.rob_infos_[alu_cdb_input_sign_.rob_id_].ready_ = true;
     }
+  }
+  if (lsq_cdb_input_sign_.rob_id_valid_ &&
+      lsq_cdb_input_sign_.value_valid_)
+  {
+    next_state_.rob_infos_[lsq_cdb_input_sign_.rob_id_].rd_value_valid_ = true;
+    next_state_.rob_infos_[lsq_cdb_input_sign_.rob_id_].rd_value_ =
+        lsq_cdb_input_sign_.value_;
+    next_state_.rob_infos_[lsq_cdb_input_sign_.rob_id_].ready_ = true;
   }
   if (issue_input_sign_.rob_id_valid_)
   {
