@@ -150,8 +150,8 @@ struct IssueToRSSign
   uint32_t Vj_ = 0;
   bool Vk_valid_ = false;
   uint32_t Vk_ = 0;
-  bool imm_valid_ = false;
-  uint32_t imm_ = 0;
+  bool offset_valid_ = false;
+  uint32_t offset_ = 0;
   bool Qj_valid_ = false;
   uint8_t Qj_ = 0;
   bool Qk_valid_ = false;
