@@ -184,6 +184,8 @@ struct LSQToMemSign
   uint32_t addr_ = 0;
   bool value_valid_ = false;
   uint32_t value_ = 0;
+  uint8_t bytes_ = 0;       // 访问字节数：1、2、4
+  bool is_signed_ = false;  // 仅 Load 有效：true 有符号，false 无符号
 
   auto operator<=>(const LSQToMemSign &) const = default;
 };
