@@ -41,7 +41,7 @@ void Issue::Execute(Register &registers, RAT &rat,
     Op now_op = decoder_input.op_;
     if (now_op == Op::Halt)
     {
-      // Halt 只进入 ROB，不进入 RAT、RS、LSQ 或 ALU。
+      // 发给rob
       rob_output_sign_.rob_id_valid_ = true;
       rob_output_sign_.rob_id_ = rob_id;
       rob_output_sign_.rob_type = ROBType::Halt;
