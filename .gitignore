@@ -8,5 +8,6 @@
 .idea/
 
 build/
+build-tests/
 
 run_tests.sh

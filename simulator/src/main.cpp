@@ -13,6 +13,6 @@ int main()
     clock++;
   }
   std::cout << cpu.Result() << '\n';
-  // std::cout << clock << '\n';
+  std::cerr << clock << '\n';
   return 0;
 }

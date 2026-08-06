@@ -1,5 +1,9 @@
 #include "CPU.hpp"
 
+#include <algorithm>
+#include <array>
+#include <ctime>
+
 CPU::CPU()
     : memory_(fetch_to_memory_sign_, memory_to_fetch_sign_, lsq_to_memory_sign_,
               memory_to_lsq_sign_, memory_to_rob_sign_, rob_flush_sign_),
@@ -22,6 +26,7 @@ CPU::CPU()
            lsq_to_rob_sign_, alu_to_cdb_sign_, memory_to_lsq_sign_,
            rob_to_lsq_sign_, rob_flush_sign_)
 {
+  random_engine_.seed(static_cast<unsigned int>(std::time(nullptr)));
 }
 
 void CPU::LoadProgram(std::istream &input) { memory_.LoadProgram(input); }
@@ -105,22 +110,72 @@ void CPU::ClearSigns()
 
 void CPU::ExecuteAll()
 {
-  rob_.Execute();
-  if (rob_to_cpu_halt_sign_.need_halt_)
+  std::array<int, 10> execute_order{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+  std::shuffle(execute_order.begin(), execute_order.end(), random_engine_);
+
+  for (int module : execute_order)
   {
-    halted_ = true;
-    result_ = register_.Read(10) & 0xffu;
-    return;
+    switch (module)
+    {
+    case 0:
+    {
+      rob_.Execute();
+      break;
+    }
+    case 1:
+    {
+      rs_.Execute();
+      break;
+    }
+    case 2:
+    {
+      alu_.Execute();
+      break;
+    }
+    case 3:
+    {
+      lsq_.Execute();
+      break;
+    }
+    case 4:
+    {
+      memory_.Execute();
+      break;
+    }
+    case 5:
+    {
+      register_.Execute();
+      break;
+    }
+    case 6:
+    {
+      rat_.Execute();
+      break;
+    }
+    case 7:
+    {
+      fetch_.Execute();
+      break;
+    }
+    case 8:
+    {
+      decoder_.Execute();
+      break;
+    }
+    case 9:
+    {
+      issue_.Execute(register_, rat_, rob_);
+      break;
+    }
+    }
+
+    if (rob_to_cpu_halt_sign_.need_halt_)
+    {
+      halted_ = true;
+      result_ = register_.Read(10) & 0xffu;
+      return;
+    }
   }
-  rs_.Execute();
-  alu_.Execute();
-  lsq_.Execute();
-  memory_.Execute();
-  register_.Execute();
-  rat_.Execute();
-  fetch_.Execute();
-  decoder_.Execute();
-  issue_.Execute(register_, rat_, rob_);
 }
 
 void CPU::UpdateNextAll()

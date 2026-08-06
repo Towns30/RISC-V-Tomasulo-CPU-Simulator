@@ -14,6 +14,7 @@
 #include "Sign.hpp"
 
 #include <iosfwd>
+#include <random>
 
 class CPU
 {
@@ -65,6 +66,7 @@ private:
 
   bool halted_ = false;
   uint32_t result_ = 0;
+  std::mt19937 random_engine_{};
 
   Memory memory_;
   Fetch fetch_;
