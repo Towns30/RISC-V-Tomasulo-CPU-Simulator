@@ -11,7 +11,7 @@ CPU::CPU()
       rob_(issue_to_rob_sign_, lsq_to_rob_sign_, alu_to_cdb_sign_,
            lsq_to_cdb_sign_, memory_to_rob_sign_, rob_flush_sign_,
            rob_to_fetch_flush_sign_, rob_to_lsq_sign_, rob_to_rat_sign_,
-           rob_to_register_sign_),
+           rob_to_register_sign_, rob_to_cpu_halt_sign_),
       issue_(decoder_to_issue_sign_, issue_to_rat_sign_, issue_to_lsq_sign_,
              issue_to_rs_sign_, issue_to_rob_sign_, alu_to_cdb_sign_,
              lsq_to_cdb_sign_, rob_flush_sign_),
@@ -24,14 +24,28 @@ CPU::CPU()
 {
 }
 
+void CPU::LoadProgram(std::istream &input) { memory_.LoadProgram(input); }
+
 void CPU::Cycle()
 {
+  if (halted_)
+  {
+    return;
+  }
   UpdateCurrentAll();
   SetReadyAll();
   ClearSigns();
   ExecuteAll();
+  if (halted_)
+  {
+    return;
+  }
   UpdateNextAll();
 }
+
+bool CPU::Halted() const { return halted_; }
+
+uint32_t CPU::Result() const { return result_; }
 
 void CPU::UpdateCurrentAll()
 {
@@ -86,11 +100,18 @@ void CPU::ClearSigns()
   rob_to_fetch_flush_sign_ = {};
   rob_to_rat_sign_ = {};
   rob_to_register_sign_ = {};
+  rob_to_cpu_halt_sign_ = {};
 }
 
 void CPU::ExecuteAll()
 {
   rob_.Execute();
+  if (rob_to_cpu_halt_sign_.need_halt_)
+  {
+    halted_ = true;
+    result_ = register_.Read(10) & 0xffu;
+    return;
+  }
   rs_.Execute();
   alu_.Execute();
   lsq_.Execute();

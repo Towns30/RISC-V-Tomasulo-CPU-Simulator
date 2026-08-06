@@ -3,6 +3,8 @@
 
 #include "Sign.hpp"
 
+#include <iosfwd>
+
 struct WritingReadingState
 {
   bool is_writing_ = false;
@@ -40,6 +42,7 @@ public:
          const ROBToIssue_RAT_LSQ_RS_Decoder_CDB_Memory_ALUFlushSign
              &flush_input_sign);
 
+  void LoadProgram(std::istream &input);
   void SetFetchReady(bool fetch_ready);
   void UpdateCurrent();
   void Execute();

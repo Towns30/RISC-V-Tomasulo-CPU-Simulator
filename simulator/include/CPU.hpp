@@ -13,12 +13,17 @@
 #include "Register.hpp"
 #include "Sign.hpp"
 
+#include <iosfwd>
+
 class CPU
 {
 public:
   CPU();
 
+  void LoadProgram(std::istream &input);
   void Cycle();
+  bool Halted() const;
+  uint32_t Result() const;
 
   CPU(const CPU &) = delete;
   CPU &operator=(const CPU &) = delete;
@@ -56,6 +61,10 @@ private:
   ROBToFetchFlushSign rob_to_fetch_flush_sign_{};
   ROBToRATSign rob_to_rat_sign_{};
   ROBToRegisterSign rob_to_register_sign_{};
+  ROBToCPUHaltSign rob_to_cpu_halt_sign_{};
+
+  bool halted_ = false;
+  uint32_t result_ = 0;
 
   Memory memory_;
   Fetch fetch_;

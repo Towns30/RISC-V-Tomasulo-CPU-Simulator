@@ -6,6 +6,7 @@
 enum class Op : std::uint8_t
 {
   Invalid,
+  Halt,
 
   // U 型
   Lui,
@@ -63,7 +64,8 @@ enum class ROBType
 {
   WriteReg,
   WriteMem,
-  Branch
+  Branch,
+  Halt
 };
 
 struct FetchToMemSign
@@ -164,7 +166,7 @@ struct IssueToRSSign
 
 struct IssueToROBSign
 {
-  ROBType rob_type;
+  ROBType rob_type = ROBType::WriteReg;
   bool rob_id_valid_ = false;
   uint8_t rob_id_ = 0;
   bool rd_valid_ = false;
@@ -304,6 +306,13 @@ struct ROBToRegisterSign
   uint32_t value_ = 0;
 
   auto operator<=>(const ROBToRegisterSign &) const = default;
+};
+
+struct ROBToCPUHaltSign
+{
+  bool need_halt_ = false;
+
+  auto operator<=>(const ROBToCPUHaltSign &) const = default;
 };
 
 struct MemToFetchSign

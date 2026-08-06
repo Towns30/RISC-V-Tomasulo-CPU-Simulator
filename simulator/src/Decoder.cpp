@@ -40,6 +40,14 @@ void Decoder::Execute() // 利用current发送output
       current_state_.fetch_input_.predicted_next_pc_valid_;
   issue_output_sign_.predicted_next_pc_ =
       current_state_.fetch_input_.predicted_next_pc_;
+
+  if (inst == 0x0ff00513u)
+  {
+    issue_output_sign_.op_valid_ = true;
+    issue_output_sign_.op_ = Op::Halt;
+    return;
+  }
+  
   const uint32_t opcode = inst & 0x7f;
   const uint8_t rd = (inst >> 7) & 0b11111u;
   const uint32_t funct3 = (inst >> 12) & 0b111u;

@@ -67,7 +67,8 @@ public:
       ROBToIssue_RAT_LSQ_RS_Decoder_CDB_Memory_ALUFlushSign &flush_output_sign,
       ROBToFetchFlushSign &fetch_flush_output_sign,
       ROBToLSQSign &lsq_output_sign, ROBToRATSign &rat_output_sign,
-      ROBToRegisterSign &register_output_sign);
+      ROBToRegisterSign &register_output_sign,
+      ROBToCPUHaltSign &halt_output_sign);
 
   bool Ready();
   ROBQueryIDResult NextId();
@@ -88,6 +89,7 @@ private:
   ROBToLSQSign &lsq_output_sign_;
   ROBToRATSign &rat_output_sign_;
   ROBToRegisterSign &register_output_sign_;
+  ROBToCPUHaltSign &halt_output_sign_;
   ROBState current_state_;
   ROBState next_state_;
 };

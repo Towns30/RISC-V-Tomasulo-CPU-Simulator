@@ -39,10 +39,17 @@ void Issue::Execute(Register &registers, RAT &rat,
   {
     uint8_t rob_id = rob.NextId().rob_id_; // 一定能取出
     Op now_op = decoder_input.op_;
-    if (now_op == Op::Add || now_op == Op::Sub || now_op == Op::Xor ||
-        now_op == Op::Or || now_op == Op::And || now_op == Op::Sll ||
-        now_op == Op::Srl || now_op == Op::Sra || now_op == Op::Slt ||
-        now_op == Op::Sltu)
+    if (now_op == Op::Halt)
+    {
+      // Halt 只进入 ROB，不进入 RAT、RS、LSQ 或 ALU。
+      rob_output_sign_.rob_id_valid_ = true;
+      rob_output_sign_.rob_id_ = rob_id;
+      rob_output_sign_.rob_type = ROBType::Halt;
+    }
+    else if (now_op == Op::Add || now_op == Op::Sub || now_op == Op::Xor ||
+             now_op == Op::Or || now_op == Op::And || now_op == Op::Sll ||
+             now_op == Op::Srl || now_op == Op::Sra || now_op == Op::Slt ||
+             now_op == Op::Sltu)
     {
       if (decoder_input.rs1_valid_ &&
           decoder_input.rs2_valid_) // 不要求rd_valid 因为有可能是rd = 0

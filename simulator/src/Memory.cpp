@@ -1,5 +1,9 @@
 #include "Memory.hpp"
 
+#include <istream>
+#include <stdexcept>
+#include <string>
+
 Memory::Memory(const FetchToMemSign &fetch_input_sign,
                MemToFetchSign &fetch_output_sign,
                const LSQToMemSign &lsq_input_sign,
@@ -11,6 +15,24 @@ Memory::Memory(const FetchToMemSign &fetch_input_sign,
       lsq_output_sign_(lsq_output_sign), rob_output_sign_(rob_output_sign),
       flush_input_sign_(flush_input_sign)
 {
+}
+
+void Memory::LoadProgram(std::istream &input)
+{
+  uint32_t address = 0;
+  std::string token;
+
+  while (input >> token)
+  {
+    if (token[0] == '@')
+    {
+      address = static_cast<uint32_t>(std::stoul(token.substr(1), nullptr, 16));
+      continue;
+    }
+    unsigned long value = std::stoul(token, nullptr, 16);
+    memory_[address] = static_cast<uint8_t>(value);
+    address++;
+  }
 }
 
 void Memory::SetFetchReady(bool fetch_ready) { fetch_ready_ = fetch_ready; }
@@ -118,6 +140,7 @@ void Memory::Execute() // 利用current发送output，以及修改next
   }
   if (fetch_ready_ && current_state_.fetch_input_.pc_valid_) // 只有fetch不阻塞时，此时fetch也会发来有效pc，这时才能给fetch发消息
   {
+    // 倒序发送
     uint32_t pc = current_state_.fetch_input_.pc_;
     uint32_t byte0 = uint32_t(memory_[pc]);
     uint32_t byte1 = uint32_t(memory_[pc + 1]);

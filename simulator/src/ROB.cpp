@@ -7,7 +7,8 @@ ROB::ROB(
     const MemToROBSign &memory_input_sign,
     ROBToIssue_RAT_LSQ_RS_Decoder_CDB_Memory_ALUFlushSign &flush_output_sign,
     ROBToFetchFlushSign &fetch_flush_output_sign, ROBToLSQSign &lsq_output_sign,
-    ROBToRATSign &rat_output_sign, ROBToRegisterSign &register_output_sign)
+    ROBToRATSign &rat_output_sign, ROBToRegisterSign &register_output_sign,
+    ROBToCPUHaltSign &halt_output_sign)
     : issue_input_sign_(issue_input_sign), lsq_input_sign_(lsq_input_sign),
       alu_cdb_input_sign_(alu_cdb_input_sign),
       lsq_cdb_input_sign_(lsq_cdb_input_sign),
@@ -15,7 +16,8 @@ ROB::ROB(
       flush_output_sign_(flush_output_sign),
       fetch_flush_output_sign_(fetch_flush_output_sign),
       lsq_output_sign_(lsq_output_sign), rat_output_sign_(rat_output_sign),
-      register_output_sign_(register_output_sign)
+      register_output_sign_(register_output_sign),
+      halt_output_sign_(halt_output_sign)
 {
 }
 
@@ -142,6 +144,11 @@ void ROB::Execute() // 利用current发送output，以及修改next
     next_state_.head_ = (next_state_.head_ + 1) % 16;
     break;
   }
+  case ROBType::Halt:
+  {
+    halt_output_sign_.need_halt_ = true;
+    break;
+  }
   }
 }
 
@@ -226,6 +233,13 @@ void ROB::UpdateNext() // 利用本周期input计算 next_state_
         next_state_.rob_infos_[issue_input_sign_.rob_id_].rd_ =
             issue_input_sign_.rd_;
       }
+      next_state_.tail_ = (next_state_.tail_ + 1) % 16; // 入队
+      break;
+    }
+    case ROBType::Halt:
+    {
+      next_state_.rob_infos_[issue_input_sign_.rob_id_] =
+          ROBInfo{.rob_type = ROBType::Halt, .ready_ = true};
       next_state_.tail_ = (next_state_.tail_ + 1) % 16; // 入队
       break;
     }
