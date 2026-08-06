@@ -1,4 +1,3 @@
-# LaTeX 编译临时文件
 *.aux
 *.log
 *.nav
@@ -6,5 +5,8 @@
 *.snm
 *.toc
 
-# JetBrains IDE (CLion / IDEA) 缓存
 .idea/
+
+build/
+
+run_tests.sh
