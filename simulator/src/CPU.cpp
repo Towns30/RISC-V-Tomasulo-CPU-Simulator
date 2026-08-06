@@ -14,7 +14,7 @@ CPU::CPU()
            rob_to_register_sign_),
       issue_(decoder_to_issue_sign_, issue_to_rat_sign_, issue_to_lsq_sign_,
              issue_to_rs_sign_, issue_to_rob_sign_, alu_to_cdb_sign_,
-             lsq_to_cdb_sign_, rob_flush_sign_, register_, rat_, rob_),
+             lsq_to_cdb_sign_, rob_flush_sign_),
       rs_(issue_to_rs_sign_, rs_to_alu_sign_, alu_to_cdb_sign_,
           lsq_to_cdb_sign_, rob_flush_sign_),
       alu_(rs_to_alu_sign_, alu_to_cdb_sign_, rob_flush_sign_),
@@ -99,7 +99,7 @@ void CPU::ExecuteAll()
   rat_.Execute();
   fetch_.Execute();
   decoder_.Execute();
-  issue_.Execute();
+  issue_.Execute(register_, rat_, rob_);
 }
 
 void CPU::UpdateNextAll()
